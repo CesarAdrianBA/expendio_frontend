@@ -19,6 +19,17 @@ import {
   Package,
  } from "lucide-react"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
+ import InventoryCard from "@/src/components/inventory/InventoryCard"
+
 type Product = {
   id: number
   name: string
@@ -39,7 +50,7 @@ interface DataTableProps {
 
 
 function getStockStatus(stock: number) {
-  if (stock === 0) {
+  if (stock === 0 || stock < 0 || stock === null || stock === undefined) {
     return {
       label: "Agotado",
       className: "bg-red-500 hover:bg-red-500",
@@ -60,11 +71,7 @@ function getStockStatus(stock: number) {
 }
 
 export function DataTable({ data }: DataTableProps) {
-
-    function suggestedPriceOperation(unitsPerPackage: number, unitCost: number) {
-    return (unitCost / unitsPerPackage) + (unitCost / unitsPerPackage) * 0.2; // Agrega un margen del 20%
     
-  }
   return (
     <div className="space-y-6"> 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -102,11 +109,7 @@ export function DataTable({ data }: DataTableProps) {
                 <TableHead>ID</TableHead>
                 <TableHead>Nombre</TableHead>
                 <TableHead>Categoría</TableHead>
-                {/* <TableHead>Marca</TableHead> */}
-                <TableHead>Unidad</TableHead>
-                {/* <TableHead>Unidades por paquete</TableHead> */}
-                {/* <TableHead>Costo unitario</TableHead> */}
-                {/* <TableHead>Precio sugerido</TableHead> */}
+                <TableHead>Marca</TableHead>
                 <TableHead>Precio</TableHead>
                 <TableHead>Inventario</TableHead>
                 <TableHead>Estado</TableHead>
@@ -122,28 +125,38 @@ export function DataTable({ data }: DataTableProps) {
                     <TableCell>{Product.id}</TableCell>
                     <TableCell>{Product.name}</TableCell>
                     <TableCell>{Product.category}</TableCell>
-                    {/* <TableCell>{Product.brand}</TableCell> */}
-                    <TableCell>{Product.unit}</TableCell>
-                    {/* <TableCell>{Product.unitsPerPackage}</TableCell> */}
-                    {/* <TableCell>${Product.unitCost.toFixed(2)}</TableCell> */}
-                    {/* <TableCell>${suggestedPriceOperation(Product.unitsPerPackage, Product.unitCost).toFixed(2)}</TableCell> */}
-                    <TableCell>${Product.currentPrice.toFixed(2)}</TableCell>
+                    <TableCell>{Product.brand}</TableCell>
+                    <TableCell>${Product.currentPrice}</TableCell>
                     <TableCell>{Product.stock}</TableCell>
                     <TableCell>
                       <Badge className={getStockStatus(Product.stock).className}>
                         {getStockStatus(Product.stock).label}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right">{new Date(Product.lastPurchase).toLocaleDateString()}</TableCell>
+                    <TableCell className="text-right">{Product.lastPurchase}</TableCell>
 
                     <TableCell>
                       <div className="flex justify-end gap-2">
-                        <Button
-                          size="icon"
-                          variant="outline"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                        <Dialog aria-label="Detalle del producto">
+                          <DialogTrigger asChild>
+                            <Button size="icon" variant="outline">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+
+                          <DialogContent className="w-full sm:max-w-lg h-full sm:h-120 overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle>Detalle del producto</DialogTitle>
+                              <DialogDescription>
+                                Información detallada del producto seleccionado.
+                              </DialogDescription>
+                            </DialogHeader>
+
+                            <InventoryCard product={{
+                              id: Product.id
+                            }} />
+                          </DialogContent>
+                        </Dialog>
 
                         <Button
                           size="icon"

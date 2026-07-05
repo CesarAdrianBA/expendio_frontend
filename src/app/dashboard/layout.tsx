@@ -16,7 +16,7 @@ export default function DashboardLayout({
               <Link href="/dashboard" className="block py-2 px-4 rounded hover:bg-cyan-600">Inicio</Link>
             </li>
             <li className="mb-2">
-              <Link href="/dashboard/products" className="block py-2 px-4 rounded hover:bg-cyan-600">Inventario</Link>
+              <Link href="/dashboard/inventory" className="block py-2 px-4 rounded hover:bg-cyan-600">Inventario</Link>
             </li>
             <li className="mb-2">
               <Link href="/dashboard/orders" className="block py-2 px-4 rounded hover:bg-cyan-600">Compras</Link>
